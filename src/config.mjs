@@ -1,5 +1,6 @@
 export const config = {
   brand: '휴대폰 견적 계산기',
+  googleSiteVerification: 'eB5psVRTNcW4j92DUy5z_DoiU6c_8xthdeILxHQcfaM',
   tagline: '가격 너머, 실제 부담까지',
   siteUrl: processEnv('SITE_URL', 'http://localhost:4173'),
   basePath: processEnv('BASE_PATH', ''),
