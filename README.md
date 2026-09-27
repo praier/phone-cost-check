@@ -2,9 +2,9 @@
 
 한국 휴대폰 구매조건을 24·36개월 기준으로 분석하는 정적 웹사이트입니다. 계산·저장·공유가 브라우저 안에서 작동하며 서버나 데이터베이스, 외부 라이브러리 설치가 필요하지 않습니다.
 
-공개 사이트: https://prai2r.github.io/phone-cost-check/
+공개 사이트: https://praier.github.io/phone-cost-check/
 
-GitHub 저장소: https://github.com/PRAI2R/phone-cost-check
+GitHub 저장소: https://github.com/praier/phone-cost-check
 
 ## 바로 실행
 
@@ -14,7 +14,7 @@ Node.js 20 이상을 설치한 뒤 이 폴더에서 실행합니다. 검수 환�
 npm start
 ```
 
-브라우저에서 **http://localhost:4173**을 엽니다. Windows에서는 `start-windows.cmd`를 실행해도 됩니다. 종료는 실행 창에서 Ctrl+C입니다. `dist/index.html`을 더블클릭하는 file:// 방식은 모듈·설정 로딩 제약으로 지원하지 않습니다.
+브라우저에서 [http://localhost:4173](http://localhost:4173)을 엽니다. Windows에서는 `start-windows.cmd`를 실행해도 됩니다. 종료는 실행 창에서 Ctrl+C입니다. `dist/index.html`을 더블클릭하는 file:// 방식은 모듈·설정 로딩 제약으로 지원하지 않습니다.
 
 ZIP에는 `dist/`가 포함되어 있습니다. GitHub 소스에서는 `npm start`가 먼저 빌드하므로 별도 설치 없이 실행됩니다. 소스를 수정한 뒤 검증하려면:
 
