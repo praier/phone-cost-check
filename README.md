@@ -64,7 +64,7 @@ scripts/
   check.mjs        링크·자산·메타데이터·H1 검증
   release.mjs      실제 도메인·운영자·이메일 확인 후 공개 배포 빌드
 tests/
-  calculate.test.mjs  26개 계산·가격·공유 테스트
+  calculate.test.mjs  30개 계산·가격·공유 테스트
 dist/             완성된 정적 배포 파일 전체
 .github/workflows/pages.yml  GitHub Pages 자동·수동 배포 워크플로
 docs/             조사 결과·계산 기준·검수 기록
@@ -133,6 +133,6 @@ Git 연동을 선택했다면 빌드 명령은 `node scripts/release.mjs`, 출�
 
 ## 검증과 한계
 
-26개 계산·가격·공유 테스트와 내부 링크 검증, 실제 브라우저 주요 흐름 검수를 수행했습니다. 상세 기록은 `docs/QA.md`에 있습니다. Lighthouse 점수와 실제 모바일 실기기·스크린리더 검증을 측정했다고 주장하지 않습니다. 2026-09-27 GitHub Pages 공개 배포와 HTTPS 접속을 확인했습니다. 문의 주소는 실제 공개 사이트에 반영했습니다. 실제 이메일 발송은 수행하지 않았습니다.
+30개 계산·가격·공유 테스트와 내부 링크 검증, 실제 브라우저 주요 흐름 검수를 수행했습니다. 상세 기록은 `docs/QA.md`에 있습니다. Lighthouse 점수와 실제 모바일 실기기·스크린리더 검증을 측정했다고 주장하지 않습니다. 2026-09-27 GitHub Pages 공개 배포와 HTTPS 접속을 확인했습니다. 문의 주소는 실제 공개 사이트에 반영했습니다. 실제 이메일 발송은 수행하지 않았습니다.
 
 Homepage copy, FAQs and illustrative quote inputs: `src/home.mjs` (rendered at build time). Home-only lightweight menu: `src/navigation.mjs`. Search title and metadata generation: `scripts/build.mjs`. Run the build after editing these files. Sitemap modification dates are omitted until accurate per-page dates are available; do not substitute the policy reference date.
