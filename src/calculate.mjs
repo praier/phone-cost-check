@@ -1,5 +1,5 @@
-export const NUMERIC = {retail:100000000,price:100000000,deviceDiscount:100000000,subsidy:100000000,extra:100000000,coupon:100000000,other:100000000,card:1000000,cardMonths:120,cardFee:10000000,plan:10000000,hold:120,laterPlan:10000000,discountRate:100,discountMonths:120,insurance:1000000,insuranceMonths:120,term:120,apr:100,flatFee:100000000};
-export function defaultQuote(rate=25) { return {name:'내 견적',model:'',retail:0,price:0,priceMode:'net',method:'unlocked',deviceDiscount:0,subsidy:0,extra:0,coupon:0,other:0,card:0,cardMonths:24,cardFee:0,plan:0,hold:0,laterPlan:0,discount:false,discountRate:rate,discountMonths:24,addons:[],insurance:0,insuranceMonths:24,term:0,feeMode:'apr',apr:0,flatFee:0,planMode:'staged',cashOnly:false,catalogId:'',catalogCapacity:'',offerId:'',priceNote:''}; }
+export const NUMERIC = {budget:100000000,retail:100000000,price:100000000,deviceDiscount:100000000,subsidy:100000000,extra:100000000,coupon:100000000,other:100000000,card:1000000,cardMonths:120,cardFee:10000000,plan:10000000,hold:120,laterPlan:10000000,discountRate:100,discountMonths:120,insurance:1000000,insuranceMonths:120,term:120,apr:100,flatFee:100000000};
+export function defaultQuote(rate=25) { return {name:'내 견적',budget:0,model:'',retail:0,price:0,priceMode:'net',method:'unlocked',deviceDiscount:0,subsidy:0,extra:0,coupon:0,other:0,card:0,cardMonths:24,cardFee:0,plan:0,hold:0,laterPlan:0,discount:false,discountRate:rate,discountMonths:24,addons:[],insurance:0,insuranceMonths:24,term:0,feeMode:'apr',apr:0,flatFee:0,planMode:'staged',cashOnly:false,catalogId:'',catalogCapacity:'',offerId:'',priceNote:''}; }
 export function freshQuote(rate=25){return {...defaultQuote(rate),planMode:'fixed',plan:null};}
 export function needsPriceApplication(q,selection){
   if(!selection.model)return false;
@@ -54,6 +54,6 @@ export function calculateTotalCost(input,months=24) {
   const total=cash+remaining,plan=sum('plan'),interest=sum('interest'),addons=sum('addons'),insurance=sum('insurance'),card=sum('card'),cardFee=sum('cardFee');
   const futureFee=loan.rows.slice(months).reduce((s,r)=>s+r.interest,0);
   let premium=0;for(let m=1;m<=(q.planMode==='fixed'?0:Math.min(q.hold,months));m++) premium+=Math.max(0,calculatePlanCost(q,m).cost-(q.laterPlan-calculateDiscount(q.laterPlan,q.discount&&m<=q.discountMonths,q.discountRate)));
-  return {months,total,cash,remaining,futureFee,average:total/months,device,plan,interest,addons,insurance,card,cardFee,rows,premium,discounts:(q.priceMode==='gross'?q.price-device:Math.max(0,q.retail-device))+sum('planDiscount')+card,loan};
+  return {first:rows[0].total,peak:Math.max(...rows.map(x=>x.total)),budgetGap:q.budget?total-q.budget:null,months,total,cash,remaining,futureFee,average:total/months,device,plan,interest,addons,insurance,card,cardFee,rows,premium,discounts:(q.priceMode==='gross'?q.price-device:Math.max(0,q.retail-device))+sum('planDiscount')+card,loan};
 }
 export function calculateMvno(current,next,remaining,penalty,other) { const monthly=current-next,initial=penalty+other;return {monthly,annual:monthly*12,breakEven:monthly>0?initial/monthly:null,netRemaining:monthly*remaining-initial}; }
