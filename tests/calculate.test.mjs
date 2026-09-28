@@ -55,3 +55,17 @@ test('조건부 혜택의 모델명 수정은 할부 제한을 해제하지 않�
  assert.throws(()=>calculateTotalCost({...quote,model:'내 휴대폰',term:24}));
  assert.equal(calculateTotalCost({...quote,model:'내 휴대폰'}).total,1091100);
 });
+test('예산 초과와 첫 달·최대 월 지출은 평균과 구분',()=>{
+ const quote={...freshQuote(),model:'가상 기기',price:450000,plan:15000,budget:900000};
+ const r=calculateTotalCost(quote,36);assert.equal(r.total,990000);assert.equal(r.budgetGap,90000);assert.equal(r.first,465000);assert.equal(r.peak,465000);assert.equal(r.average,27500);
+ assert.equal(calculateTotalCost(quote,24).budgetGap,-90000);
+});
+test('예산 미설정과 기존 공유 견적은 계산 금액을 바꾸지 않음',()=>{
+ const quote=q({price:400000,laterPlan:15000});delete quote.budget;
+ const r=calculateTotalCost(quote);assert.equal(r.budgetGap,null);assert.equal(r.total,760000);
+ assert.equal(calculateTotalCost({...quote,budget:1000000}).total,r.total);
+});
+test('기존 폰 유지 시나리오와 월 지출 최대값',()=>{
+ const r=calculateTotalCost({...freshQuote(),model:'현재 기기',price:0,plan:15000,budget:400000});
+ assert.equal(r.total,360000);assert.equal(r.first,15000);assert.equal(r.peak,15000);assert.equal(r.budgetGap,-40000);
+});
