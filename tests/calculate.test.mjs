@@ -21,6 +21,7 @@ test('알뜰폰 회수기간과 순절감',()=>{const r=calculateMvno(69000,2500
 test('공유/저장 파싱은 알 수 없는 속성 제외, 잘못된 자료 거부',()=>{assert.equal(sanitizeQuote({...q(),privateField:'secret'}).privateField,undefined);assert.throws(()=>sanitizeQuote({...q(),addons:null}));assert.throws(()=>sanitizeQuote({...q(),addons:[null]}));assert.throws(()=>calculateTotalCost(q(),0));});
 
 import {freshQuote} from '../src/calculate.mjs';
+import {needsPriceApplication,shouldOfferDraftRestore} from '../src/calculate.mjs';
 import {catalog,applyCatalogChoice,offerAvailable} from '../src/catalog.mjs';
 import {encodeQuote,decodeQuote} from '../src/share.mjs';
 test('고정 요금제: 월 25000 입력만으로 24개월 60만원 반영',()=>{const r=calculateTotalCost({...freshQuote(),model:'기기',price:1500000,plan:25000});assert.equal(r.total,2100000);assert.equal(r.premium,0);});
@@ -32,3 +33,25 @@ test('혜택 만료는 한국 시간 9월30일 종료 기준',()=>{const p=catal
 test('공유 링크는 36개월 선택을 보존하고 개인정보 텍스트 제외',()=>{const original=q({name:'매장 이름',model:'개인 메모',priceNote:'개인 메모',addons:[{name:'개인 이름',cost:1000,months:2}]});const restored=decodeQuote(encodeQuote(original,36));assert.equal(restored.period,36);assert.equal(restored.quote.model,'공유 기기');assert.equal(restored.quote.priceNote,'');assert.equal(restored.quote.addons[0].name,'부가서비스 1');assert.equal(calculateTotalCost(restored.quote,36).total,calculateTotalCost(original,36).total);});
 test('이전 버전 링크는 24개월로 열림, 잘못된 기간은 거부',()=>{const raw=Buffer.from(JSON.stringify({version:1,quote:q()})).toString('base64');assert.equal(decodeQuote(raw).period,24);assert.throws(()=>decodeQuote(Buffer.from(JSON.stringify({version:2,period:99,quote:q()})).toString('base64')));});
 test('공식가와 직접 입력 견적은 동일한 계산식 사용',()=>{const p=catalog.find(x=>x.id==='iphone-17'),v=p.variants[0];const result=applyCatalogChoice({...freshQuote(),plan:25000},p,v);assert.equal(calculateTotalCost(result).total,2050000);assert.equal(calculateTotalCost({...result,priceMode:'net',price:1450000,deviceDiscount:0,catalogId:''}).total,2050000);});
+test('모델 적용 후 다른 모델·용량·할인 선택은 재적용 필요',()=>{
+ const p=catalog[0],quote=applyCatalogChoice(q(),p,p.variants[0]);
+ const selected={model:p.id,capacity:'256GB',offer:'list',price:'list'};
+ assert.equal(needsPriceApplication(quote,selected),false);
+ for(const changed of [{model:'iphone-17'},{capacity:'512GB'},{offer:'official-benefit'},{price:'manual'}])assert.equal(needsPriceApplication(quote,{...selected,...changed}),true);
+ assert.equal(needsPriceApplication(quote,{model:''}),false);
+});
+test('본문 앵커는 복구 허용, 공유 링크와 불러온 견적은 덮어쓰지 않음',()=>{
+ for(const hash of ['', '#main','#results'])assert.equal(shouldOfferDraftRestore(null,hash),true);
+ assert.equal(shouldOfferDraftRestore(null,'#q=abc'),false);
+ assert.equal(shouldOfferDraftRestore(q(),'#main'),false);
+});
+test('신규 견적 요금 미입력은 거부, 사용자가 입력한 0원은 허용',()=>{
+ const quote={...freshQuote(),model:'기기',price:1500000};
+ assert.throws(()=>calculateTotalCost(quote));
+ assert.equal(calculateTotalCost({...quote,plan:0}).total,1500000);
+});
+test('조건부 혜택의 모델명 수정은 할부 제한을 해제하지 않음',()=>{
+ const p=catalog[0],quote=applyCatalogChoice(q(),p,p.variants[0],p.variants[0].offers[0],new Date('2026-09-28T00:00:00Z'));
+ assert.throws(()=>calculateTotalCost({...quote,model:'내 휴대폰',term:24}));
+ assert.equal(calculateTotalCost({...quote,model:'내 휴대폰'}).total,1091100);
+});
