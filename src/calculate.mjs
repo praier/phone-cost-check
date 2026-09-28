@@ -1,6 +1,11 @@
 export const NUMERIC = {retail:100000000,price:100000000,deviceDiscount:100000000,subsidy:100000000,extra:100000000,coupon:100000000,other:100000000,card:1000000,cardMonths:120,cardFee:10000000,plan:10000000,hold:120,laterPlan:10000000,discountRate:100,discountMonths:120,insurance:1000000,insuranceMonths:120,term:120,apr:100,flatFee:100000000};
 export function defaultQuote(rate=25) { return {name:'내 견적',model:'',retail:0,price:0,priceMode:'net',method:'unlocked',deviceDiscount:0,subsidy:0,extra:0,coupon:0,other:0,card:0,cardMonths:24,cardFee:0,plan:0,hold:0,laterPlan:0,discount:false,discountRate:rate,discountMonths:24,addons:[],insurance:0,insuranceMonths:24,term:0,feeMode:'apr',apr:0,flatFee:0,planMode:'staged',cashOnly:false,catalogId:'',catalogCapacity:'',offerId:'',priceNote:''}; }
-export function freshQuote(rate=25){return {...defaultQuote(rate),planMode:'fixed'};}
+export function freshQuote(rate=25){return {...defaultQuote(rate),planMode:'fixed',plan:null};}
+export function needsPriceApplication(q,selection){
+  if(!selection.model)return false;
+  return selection.model!==q.catalogId||selection.capacity!==q.catalogCapacity||selection.offer!==q.offerId||selection.price==='manual';
+}
+export function shouldOfferDraftRestore(analyzed,hash){return !analyzed&&!hash.startsWith('#q=');}
 export function validateQuote(q) {
   const errors=[];
   if(!q || typeof q!=='object') return ['견적 형식이 올바르지 않습니다.'];
