@@ -29,7 +29,9 @@ npm start
 
 ## 구현 기능
 
-- 8단계 견적 입력, 금액 쉼표 표시, 0원·누락값·음수·기간 검증
+- 5단계 견적 입력, 공식 가격 선택 / 직접 입력, 금액 쉼표 표시, 0원·누락값·음수·기간 검증
+- 공식 출처로 확인한 9개 모델·23개 용량별 가격과 조건부 할인, 출처·확인일·만료 처리
+- 작성 중 입력 복구, 기존 견적 업데이트 / 사본 저장, 24·36개월 공유 기간 유지
 - 최종 원금 / 할인 전 가격 구분으로 지원금 이중 차감 방지
 - 24·36개월 총비용, 월평균, 실제 지출, 남은 할부원금과 미래 이자 분리
 - 요금제 2구간, 선택약정 적용기간·할인율, 복수 부가서비스, 보험, 조건부 카드 할인
@@ -48,6 +50,10 @@ npm start
 src/
   config.mjs       브랜드·도메인·문의처·정책 기본값·공식 출처·광고 설정
   calculate.mjs    UI와 분리된 순수 계산 함수 및 입력 검증
+  catalog.mjs      공식 모델·용량·가격·조건부 할인·출처·유효기간
+  editor.mjs       선택형 가격 목록과 단계별 입력 화면
+  editor-controls.mjs  선택 적용·조건 안내·입력 항목 표시 제어
+  share.mjs        공유 링크 버전 관리·개인 텍스트 제외
   views.mjs        입력 단계·결과 카드·차트·월별 표
   app.mjs          저장·공유·비교·입력 이벤트, 보조 계산기 연결
   content.mjs      6개 구매 가이드 및 체크리스트
@@ -58,7 +64,7 @@ scripts/
   check.mjs        링크·자산·메타데이터·H1 검증
   release.mjs      실제 도메인·운영자·이메일 확인 후 공개 배포 빌드
 tests/
-  calculate.test.mjs  17개 계산 테스트
+  calculate.test.mjs  26개 계산·가격·공유 테스트
 dist/             완성된 정적 배포 파일 전체
 .github/workflows/pages.yml  GitHub Pages 자동·수동 배포 워크플로
 docs/             조사 결과·계산 기준·검수 기록
@@ -127,4 +133,6 @@ Git 연동을 선택했다면 빌드 명령은 `node scripts/release.mjs`, 출�
 
 ## 검증과 한계
 
-17개 계산 테스트와 내부 링크 검증, 실제 브라우저 주요 흐름 검수를 수행했습니다. 상세 기록은 `docs/QA.md`에 있습니다. Lighthouse 점수와 실제 모바일 실기기·스크린리더 검증을 측정했다고 주장하지 않습니다. 2026-09-27 GitHub Pages 공개 배포와 HTTPS 접속을 확인했습니다. 문의 주소는 실제 공개 사이트에 반영했습니다. 실제 이메일 발송은 수행하지 않았습니다.
+26개 계산·가격·공유 테스트와 내부 링크 검증, 실제 브라우저 주요 흐름 검수를 수행했습니다. 상세 기록은 `docs/QA.md`에 있습니다. Lighthouse 점수와 실제 모바일 실기기·스크린리더 검증을 측정했다고 주장하지 않습니다. 2026-09-27 GitHub Pages 공개 배포와 HTTPS 접속을 확인했습니다. 문의 주소는 실제 공개 사이트에 반영했습니다. 실제 이메일 발송은 수행하지 않았습니다.
+
+Homepage copy, FAQs and illustrative quote inputs: `src/home.mjs` (rendered at build time). Home-only lightweight menu: `src/navigation.mjs`. Search title and metadata generation: `scripts/build.mjs`. Run the build after editing these files. Sitemap modification dates are omitted until accurate per-page dates are available; do not substitute the policy reference date.
