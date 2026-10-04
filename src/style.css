@@ -32,3 +32,7 @@
 @media(max-width:540px){.field-grid{grid-template-columns:minmax(0,1fr);gap:16px}.field>span{min-height:28px;margin-bottom:8px}.help[open] p{top:36px}.field input,.field select{height:52px;min-height:52px}.panel{padding:18px}.catalog-picker{padding:14px}.step-title{gap:10px}.step-title h2{font-size:18px}.analyze-bar .hint{display:none}.analyze-bar{padding:10px 0}.editor-toolbar .actions{gap:4px}.draft-banner{padding:12px 14px}}
 
 .compare-condition{white-space:normal;min-width:180px;max-width:280px;font-size:13px;font-weight:400;text-align:left}.compare-condition p{margin:8px 0}.compare-condition summary{cursor:pointer;padding:8px 0}.buyer-help{margin-bottom:18px}.buyer-paths p{font-size:14px;color:#435967}.buyer-paths strong{color:var(--ink)}
+
+/* Article navigation stays visible independently of the mobile header menu. */
+.prose nav{display:block;font-size:inherit;min-height:0;padding:18px;background:var(--mint);border-radius:12px;margin:20px 0}.prose nav h2{margin-top:0}.prose nav a{white-space:normal;padding:5px 0;display:inline-block;text-decoration:underline;text-underline-offset:3px}.prose section{scroll-margin-top:20px}
+
